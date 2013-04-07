@@ -1,3 +1,3 @@
-require 'FoodTracker'
+require './FoodTracker.rb'
 ft = FoodTracker.new()
 ft.commandLine

@@ -1,4 +1,4 @@
-require './FoodItem'
+require './FoodItem.rb'
 
 class FoodTracker
 
