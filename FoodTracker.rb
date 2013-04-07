@@ -6,22 +6,22 @@ class FoodTracker
     @table = Hash.new()
   end
 
-  def commandLine()
+  def command_line()
     puts("(n)ew , (a)dd, (r)ead, (q)uit\nput in a hash to remove one element of it, or add a new item to store it in the database.\n")
     input = gets.chomp
     puts()
     while(input != "q")
       if input == "a"
-        addLine
+        add_item_cmd
       elsif input == "r"
-        readItems
+        read_items
       elsif input == "n"
-        newItem
+        new_item
       else
         if @table.has_key?(input)
           @table[input].sub()
         else
-          newItem(input)
+          new_item(input)
         end
       end
       puts()
@@ -30,24 +30,24 @@ class FoodTracker
     end
   end
 
-  def newItem(upc=gets.chomp)
+  def new_item(upc=gets.chomp)
     @table[upc] = FoodItem.new(upc, 0)
   end
 
-  def addLine()
+  def add_item_cmd
     puts("item: ")
     item = gets.chomp
     puts("number: ")
     number = gets.chomp.to_i
-    addItem(@table[item],number)
+    add_item(@table[item],number)
   end
-  def addItem(item, number)
+  def add_item(item, number)
     item.add(number)
   end
-  def removeItem(item)
+  def remove_item(item)
     item.sub()
   end
-  def readItems()
+  def read_items()
     @table.each {|key,value| puts value}
   end
 end
