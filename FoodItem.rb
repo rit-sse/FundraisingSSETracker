@@ -11,17 +11,14 @@ class FoodItem
     else
       @name = contents.split("<tr><td>Description</td><td></td><td>")[1].split("</td>")[0]
     end
-    @UPC = hash
     @number = number
     system("rm #{hash}")
   end
 
+  attr_reader :upc, :number, :name
+  
   def add(value=1)
     @number = @number + value
-  end
-
-  def sub()
-    @number = @number - 1
   end
   
   def upc_parity_fix
