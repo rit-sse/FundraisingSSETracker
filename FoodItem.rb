@@ -16,6 +16,8 @@ class FoodItem
     system("rm #{hash}")
   end
 
+  attr_reader :upc, :number, :name
+  
   def add(value=1)
     @number = @number + value
   end

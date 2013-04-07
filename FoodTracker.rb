@@ -32,7 +32,8 @@ class FoodTracker
   end
 
   def new_item(upc=gets.chomp)
-    @table[upc] = FoodItem.new(upc, 0)
+    item = FoodItem.new(upc,0)
+    @table[item.upc] = item
   end
 
   def add_item_cmd
