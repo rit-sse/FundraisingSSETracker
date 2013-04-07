@@ -7,7 +7,8 @@ class FoodTracker
   end
 
   def command_line()
-    puts("(n)ew , (a)dd, (r)ead, (q)uit\nput in a hash to remove one element of it, or add a new item to store it in the database.\n")
+    instructions = "(n)ew , (a)dd, (r)ead, (q)uit\nput in a hash to remove one element of it, or add a new item to store it in the database.\n"
+    puts(instructions)
     input = gets.chomp
     puts()
     while(input != "q")
@@ -25,7 +26,7 @@ class FoodTracker
         end
       end
       puts()
-      puts("(n)ew , (a)dd, (r)ead,\nput in a hash to remove one element of it.\n(q)uit")
+      puts(instructions)
       input = gets.chomp
     end
   end
