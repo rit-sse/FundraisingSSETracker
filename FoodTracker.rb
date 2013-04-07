@@ -1,3 +1,5 @@
+require 'FoodItem'
+
 class FoodTracker
 
   def initialize()
