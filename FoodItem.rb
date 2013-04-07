@@ -1,6 +1,6 @@
 class FoodItem
   def initialize(hash, number)
-    if (hash.length = 7)
+    if (hash.length == 7)
       hash = upc_parity_fix(hash)
     end
     system("wget -q www.upcdatabase.com/item/#{hash}")
