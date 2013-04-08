@@ -18,9 +18,8 @@ class FoodTracker
       sysout( prompt )
       print ">> "
 
-      input = gets 
+      input = gets.chomp 
       abort("EOF, terminating program...") if input == nil
-      input = input.chomp
       input.downcase!
 
       case input
@@ -38,8 +37,12 @@ class FoodTracker
     end
   end
 
-  def new_item_cmd(upc=gets.chomp)
-    @table[upc] = FoodItem.new(upc,0)
+  def new_item(upc=gets.chomp)
+    if !@table.has_key?(upc)
+      @table[upc] = FoodItem.new(upc,1)
+    else
+      @table[upc].add
+    end
   end
 
   # Add any number of items
@@ -57,7 +60,7 @@ class FoodTracker
   end
 
   # Read items
-  def read_items_cmd
+  def read_items
     @table.each {|key,value| puts value}
   end
 

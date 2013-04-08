@@ -21,7 +21,9 @@ class FoodItem
     @number = @number + value
   end
   
-  def upc_parity_fix
+  def upc_parity_fix(upc)
+    str_dec = ""
+    upc + str_dec
   end
   
   def to_s()
