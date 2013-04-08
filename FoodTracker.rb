@@ -1,6 +1,6 @@
 require './FoodItem.rb'
 
-# The Food Tracker Class is the CLI interface 
+# The Food Tracker Class is the CLI interface
 # which holds a Hash Table.
 # The hash table called @table is the data structure
 # to hold the FoodItem objec and a count of that FootItem
@@ -10,7 +10,7 @@ class FoodTracker
     sysout("Starting Food Tracker")
   end
 
-  def command_line()
+  def command_line
     prompt = "(n)ew , (a)dd, (r)ead, (q)uit\nput in a hash to remove one element of it, or add a new item to store it in the database.\n"
     while(true) do
       puts
@@ -69,7 +69,7 @@ class FoodTracker
   end
 
   # Shutdown sequence when cli recieves 'q'
-  def shutdown()
+  def shutdown
     sysout("System going for shutdown")
     #Do I/O (save to file for example)
     abort("Food Item Tracker Terminated")
