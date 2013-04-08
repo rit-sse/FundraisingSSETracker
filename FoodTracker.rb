@@ -5,20 +5,19 @@ require './FoodItem.rb'
 # The hash table called @table is the data structure
 # to hold the FoodItem objec and a count of that FootItem
 class FoodTracker
-  def initialize()
-    @table = Hash.new()
+  def initialize
+    @table = Hash.new
     sysout("Starting Food Tracker")
   end
 
   def command_line()
     prompt = "(n)ew , (a)dd, (r)ead, (q)uit\nput in a hash to remove one element of it, or add a new item to store it in the database.\n"
-    
     while(true) do
-      puts()
+      puts
       sysout( prompt )
       print ">> "
 
-      input = gets.chomp 
+      input = gets.chomp
       abort("EOF, terminating program...") if input == nil
       input.downcase!
 
@@ -66,7 +65,7 @@ class FoodTracker
 
   # System IO for future debugging
   def sysout(string)
-    puts ("[SYSTEM]: " + string)  
+    puts ("[SYSTEM]: " + string)
   end
 
   # Shutdown sequence when cli recieves 'q'

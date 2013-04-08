@@ -16,17 +16,17 @@ class FoodItem
   end
 
   attr_reader :upc, :number, :name
-  
+
   def add(value=1)
     @number = @number + value
   end
-  
+
   def upc_parity_fix(upc)
     str_dec = ""
     upc + str_dec
   end
-  
-  def to_s()
+
+  def to_s
     "#{@number}\t\"#{@name}\" (#{@UPC})"
   end
 end
