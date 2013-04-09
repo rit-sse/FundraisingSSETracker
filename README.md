@@ -3,6 +3,8 @@ FundraisingSSETracker
 
 Track 'em funds
 
-**To Run:**
+To Run:
+-------
+
 1. `bundle install`
 2. `ruby ProgramStart.rb`
