@@ -1,24 +1,20 @@
+require './FoodParser.rb'
+
 class FoodItem
   def initialize(hash, number)
-    if (hash.length == 7)
-      hash = upc_parity_fix(hash)
-    end
-    system("wget -q www.upcdatabase.com/item/#{hash}")
-    file = File.open(hash)
-    contents = file.read()
-    if !(contents.include? "Description")
-      @name = "invalid"
-    else
-      @name = contents.split("<tr><td>Description</td><td></td><td>")[1].split("</td>")[0]
-    end
+    # correct for parity bit
+    hash = upc_parity_fix(hash) if hash.length == 7
+
+    x = FoodParser.new
+    @name = x.get(hash)
     @number = number
-    system("rm #{hash}")
+    @upc = hash
   end
 
   attr_reader :upc, :number, :name
 
   def add(value=1)
-    @number = @number + value
+    @number += value
   end
 
   def upc_parity_fix(upc)
@@ -27,6 +23,7 @@ class FoodItem
   end
 
   def to_s
-    "#{@number}\t\"#{@name}\" (#{@UPC})"
+    "#{@number}\t\"#{@name}\" (#{@upc})"
   end
+
 end
