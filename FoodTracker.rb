@@ -1,9 +1,7 @@
 require './FoodItem.rb'
 
 # The Food Tracker Class is the CLI interface
-# which holds a Hash Table.
-# The hash table called @table is the data structure
-# to hold the FoodItem objec and a count of that FootItem
+# which holds a Hash Table of FoodItems.
 class FoodTracker
   def initialize
     @table = Hash.new
@@ -42,6 +40,7 @@ class FoodTracker
     else
       @table[upc].add
     end
+    puts("#{@table[upc].name}")
   end
 
   # Add any number of items
