@@ -35,7 +35,6 @@ class FoodSaver
 		end
 	end
 
-
 	def load_item
 		loaded = Hash.new
 		begin
