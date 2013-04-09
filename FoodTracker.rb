@@ -7,10 +7,10 @@ require './FoodSaver.rb'
 # to hold the FoodItem objec and a count of that FootItem
 class FoodTracker
 
-  def initialize
+  def initialize(saver)
     @table = Hash.new
-    @saver = FoodSaver.new
-
+    @saver = saver
+    
     sysout("Loading Food...")
     @table = @saver.load_item
 
@@ -18,7 +18,7 @@ class FoodTracker
   end
 
   def command_line
-    prompt = "(n)ew , (a)dd, (r)ead, (q)uit\nput in a hash to remove one element of it, or add a new item to store it in the database.\n"
+    prompt = "(n)ew , (a)dd, (r)ead, (q)uit \nput in a hash to remove one element of it, or add a new item to store it in the database.\n"
     while(true) do
       puts
       sysout( prompt )
@@ -50,9 +50,6 @@ class FoodTracker
     else
       @table[upc].add
     end
-
-    
-
   end
 
   # Add any number of items
