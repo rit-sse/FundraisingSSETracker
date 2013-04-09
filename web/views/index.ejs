@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+
+
+    <h1>Inventory</h1>
+
+    <table>
+    	<tr><th>Name</th><th>UPC Code</th><th>Cost/Item</th><th>Retail Price</th><th>Number of Scans</th></tr>
+    	<% for(var i=0; i<result.length; i++) {%>
+   			<tr>
+   				<td><%= result[i].name %></td>
+   				<td><%= result[i].upc %></td>
+   				<td><%= result[i].cost %></td>
+   				<td><%= result[i].retail_price %></td>
+   				<td><%= result[i].amount %></td>
+   			</tr>
+		<% } %>
+    </table>
+
+  </body>
+</html>
