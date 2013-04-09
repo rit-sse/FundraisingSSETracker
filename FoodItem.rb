@@ -1,14 +1,22 @@
 require './FoodParser.rb'
 
 class FoodItem
-  def initialize(hash, number)
-    # correct for parity bit
-    hash = upc_parity_fix(hash) if hash.length == 7
 
-    x = FoodParser.new
-    @name = x.get(hash)
-    @number = number
-    @upc = hash
+
+  def initialize(upc, number, name=nil)
+    if name.nil?
+      # correct for parity bit
+      upc = upc_parity_fix(upc) if upc.length == 7
+
+      x = FoodParser.new
+      @name = x.get(upc)
+      @number = number
+      @upc = upc
+    else
+      @name = name
+      @number = number
+      @upc = upc
+    end
   end
 
   attr_reader :upc, :number, :name

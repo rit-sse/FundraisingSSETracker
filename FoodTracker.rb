@@ -1,12 +1,19 @@
 require './FoodItem.rb'
+require './FoodSaver.rb'
 
 # The Food Tracker Class is the CLI interface
 # which holds a Hash Table.
 # The hash table called @table is the data structure
 # to hold the FoodItem objec and a count of that FootItem
 class FoodTracker
+
   def initialize
     @table = Hash.new
+    @saver = FoodSaver.new
+
+    sysout("Loading Food...")
+    @table = @saver.load_item
+
     sysout("Starting Food Tracker")
   end
 
@@ -37,11 +44,15 @@ class FoodTracker
   end
 
   def new_item(upc=gets.chomp)
-    if !@table.has_key?(upc)
+    if not @table.has_key?(upc)
       @table[upc] = FoodItem.new(upc,1)
+      @saver.save_item(@table[upc])
     else
       @table[upc].add
     end
+
+    
+
   end
 
   # Add any number of items
