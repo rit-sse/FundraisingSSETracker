@@ -1,5 +1,4 @@
 FundraisingSSETracker
-=====================
 
 Track 'em funds
 
@@ -7,5 +6,5 @@ Track 'em funds
 
 1. Install [PostgreSQL](http://www.postgresql.org/)
 2. `psql < config/dbsetup.psql`
-2. `bundle install`
-3. `ruby ProgramStart.rb`
+3. `bundle install`
+4. `ruby ProgramStart.rb`

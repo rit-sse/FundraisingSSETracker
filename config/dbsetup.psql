@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS items (
 );
 
 CREATE TABLE IF NOT EXISTS scans (
-	item_upc		bigint,
+	item_upc		varchar(50),
 	time			timestamp with time zone
 );
 
