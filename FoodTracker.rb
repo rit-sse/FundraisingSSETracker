@@ -7,16 +7,19 @@ class FoodTracker
 
   def initialize(saver)
     @table = Hash.new
+    @scans = Hash.new
     @saver = saver
 
     sysout("Loading Food...")
     @table = @saver.load_item
+    sysout("Loading Scan History...")
+    @scans = @saver.load_scans
 
     sysout("Starting Food Tracker")
   end
 
   def command_line
-    prompt = "(n)ew , (a)dd, (r)ead, (q)uit \nput in a hash to remove one element of it, or add a new item to store it in the database.\n"
+    prompt = "(n)ew , (a)dd, (r)ead, (v)iew scan times, (q)uit \nput in a hash to remove one element of it, or add a new item to store it in the database.\n"
     while(true) do
       puts
       sysout( prompt )
@@ -35,19 +38,33 @@ class FoodTracker
         new_item
       when "q"
         shutdown
+      when "v"
+        list_scans
       else
         new_item(input)
       end
     end
   end
 
+  def list_scans
+    @scans.each {|upc, array| puts @table[upc].name; puts array}
+  end
+
   def new_item(upc=gets.chomp)
+    scantime = DateTime.now
+
     if not @table.has_key?(upc)
+      #create new food
       @table[upc] = FoodItem.new(upc,1)
       @saver.save_new_item(@table[upc])
+      @scans[upc] = Array.new
     else
       add_item(@table[upc])
     end
+
+    #add scan evidence to scan array
+    @scans[upc].push(scantime)
+    @saver.add_scan_timestamp(upc, scantime)
     puts("#{@table[upc].name}")
   end
 

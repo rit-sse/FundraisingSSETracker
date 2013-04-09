@@ -11,6 +11,7 @@ class FoodSaver
 		@conn.prepare('insert_in_items', 'insert into items (upc, name, cost, retail_price) values ($1, $2, $3, $4);')
 		@conn.prepare('insert_in_inventory', 'insert into inventory (item_upc, amount) values ($1, $2);')
 		@conn.prepare('update_inventory', 'update inventory set amount = $1 where item_upc=$2;')
+		@conn.prepare('insert_timestamp', 'insert into scans (item_upc, time) values ($1, $2);')
 	end
 
 	def save_new_item(item)
@@ -35,6 +36,14 @@ class FoodSaver
 		end
 	end
 
+	def add_scan_timestamp(upc, time)
+		begin
+			@conn.exec_prepared('insert_timestamp', [upc, time])
+		rescue Exception => ex
+			puts "oh no database problem time to panic (#{ex.message})"
+		end
+	end
+
 	def load_item
 		loaded = Hash.new
 		begin
@@ -43,6 +52,25 @@ class FoodSaver
 			res.each do |item|
 				upc = item["upc"]
 				loaded[upc] = FoodItem.new(upc, item["amount"], item["name"])
+			end
+
+		rescue Exception => ex
+			puts "oh no database problem time to panic (#{ex.message})"
+		end
+
+		loaded
+	end
+
+	def load_scans
+		loaded = Hash.new
+
+		begin
+			res = @conn.exec('select * from scans;')
+			
+			res.each do |item|
+				upc = item["item_upc"]
+				loaded[upc] = Array.new if not loaded.has_key? upc
+				loaded[upc].push item["time"]
 			end
 
 		rescue Exception => ex
