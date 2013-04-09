@@ -6,13 +6,13 @@ class FoodItem
   def initialize(upc, number, name=nil)
     if name.nil?
       # correct for parity bit
-      upc = upc_parity_fix(upc) if upc.length == 7
+      #upc = upc_parity_fix(upc) if upc.length == 7
       @name = FoodParser.new.get(upc)  
     else
       @name = name
     end
 
-    @number = number
+    @number = number.to_i
     @upc = upc
   end
 

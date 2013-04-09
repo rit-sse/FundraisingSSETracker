@@ -4,15 +4,32 @@ require 'pg'
 class FoodSaver
 
 	def initialize
+		#start connection
 		@conn = PG.connect(:dbname => 'fundraising')
+
+		#prepare statements
+		@conn.prepare('insert_in_items', 'insert into items (upc, name, cost, retail_price) values ($1, $2, $3, $4);')
+		@conn.prepare('insert_in_inventory', 'insert into inventory (item_upc, amount) values ($1, $2);')
+		@conn.prepare('update_inventory', 'update inventory set amount = $1 where item_upc=$2;')
 	end
 
-	def save_item(item)
+	def save_new_item(item)
 		raise "oh no" if not item.kind_of? FoodItem
 		
 		begin
-			@conn.prepare('statement', 'insert into items (upc, name, cost, retail_price) values ($1, $2, $3, $4);')
-			@conn.exec_prepared('statement', [item.upc, item.name, 0.25, 0.5])
+			# insert into items table
+			@conn.exec_prepared('insert_in_items', [item.upc, item.name, 0.25, 0.5])
+
+			# create row in inventory table
+			@conn.exec_prepared('insert_in_inventory', [item.upc, 1])
+		rescue Exception => ex
+			puts "oh no database problem time to panic (#{ex.message})"
+		end
+	end
+
+	def update_item_amount(upc, amount)
+		begin
+			@conn.exec_prepared('update_inventory', [amount, upc])
 		rescue Exception => ex
 			puts "oh no database problem time to panic (#{ex.message})"
 		end
@@ -22,11 +39,11 @@ class FoodSaver
 	def load_item
 		loaded = Hash.new
 		begin
-			res = @conn.exec('select * from items;')
+			res = @conn.exec('select * from items, inventory where items.upc = inventory.item_upc;')
 			
 			res.each do |item|
 				upc = item["upc"]
-				loaded[upc] = FoodItem.new(upc, 1, item["name"])
+				loaded[upc] = FoodItem.new(upc, item["amount"], item["name"])
 			end
 
 		rescue Exception => ex

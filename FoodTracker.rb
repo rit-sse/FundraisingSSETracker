@@ -10,7 +10,7 @@ class FoodTracker
   def initialize(saver)
     @table = Hash.new
     @saver = saver
-    
+
     sysout("Loading Food...")
     @table = @saver.load_item
 
@@ -46,9 +46,9 @@ class FoodTracker
   def new_item(upc=gets.chomp)
     if not @table.has_key?(upc)
       @table[upc] = FoodItem.new(upc,1)
-      @saver.save_item(@table[upc])
+      @saver.save_new_item(@table[upc])
     else
-      @table[upc].add
+      add_item(@table[upc])
     end
   end
 
@@ -58,12 +58,13 @@ class FoodTracker
     item = gets.chomp
     puts("number: ")
     number = gets.chomp.to_i
-    add_item(@table[item],number)
+    add_item(@table[item], number)
   end
 
   # Add Item
   def add_item(item, number=1)
     item.add(number)
+    @saver.update_item_amount(item.upc, item.number)
   end
 
   # Read items
