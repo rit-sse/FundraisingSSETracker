@@ -1,17 +1,24 @@
 require './FoodItem.rb'
+require './FoodSaver.rb'
 
 # The Food Tracker Class is the CLI interface
 # which holds a Hash Table.
 # The hash table called @table is the data structure
 # to hold the FoodItem objec and a count of that FootItem
 class FoodTracker
-  def initialize
+
+  def initialize(saver)
     @table = Hash.new
+    @saver = saver
+
+    sysout("Loading Food...")
+    @table = @saver.load_item
+
     sysout("Starting Food Tracker")
   end
 
   def command_line
-    prompt = "(n)ew , (a)dd, (r)ead, (q)uit\nput in a hash to remove one element of it, or add a new item to store it in the database.\n"
+    prompt = "(n)ew , (a)dd, (r)ead, (q)uit \nput in a hash to remove one element of it, or add a new item to store it in the database.\n"
     while(true) do
       puts
       sysout( prompt )
@@ -37,10 +44,11 @@ class FoodTracker
   end
 
   def new_item(upc=gets.chomp)
-    if !@table.has_key?(upc)
+    if not @table.has_key?(upc)
       @table[upc] = FoodItem.new(upc,1)
+      @saver.save_new_item(@table[upc])
     else
-      @table[upc].add
+      add_item(@table[upc])
     end
   end
 
@@ -50,12 +58,13 @@ class FoodTracker
     item = gets.chomp
     puts("number: ")
     number = gets.chomp.to_i
-    add_item(@table[item],number)
+    add_item(@table[item], number)
   end
 
   # Add Item
   def add_item(item, number=1)
     item.add(number)
+    @saver.update_item_amount(item.upc, item.number)
   end
 
   # Read items
