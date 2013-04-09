@@ -9,10 +9,7 @@ To Set Up:
 2. Install [NodeJS](http://www.nodejs.org/)
 3. Navigate to repo root
 2. `psql < [repo_root]/config/dbsetup.psql`
-3. `cd scanscripts`
 4. `bundle install`
-3. `cd ../web`
-4. `npm install`
 
 To Run the Scanning Script:
 ---------------------------
@@ -22,4 +19,4 @@ To Run the Scanning Script:
 To Run the Webapp:
 ------------------
 1. `cd [repo_root]/web`
-2. `node app`
+2. `ruby site.rb`
