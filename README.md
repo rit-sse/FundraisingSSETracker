@@ -1,4 +1,5 @@
 FundraisingSSETracker
+=====================
 
 Track 'em funds
 
@@ -6,7 +7,6 @@ To Set Up:
 ---------
 
 1. Install [PostgreSQL](http://www.postgresql.org/)
-2. Install [NodeJS](http://www.nodejs.org/)
 3. Navigate to repo root
 2. `psql < [repo_root]/config/dbsetup.psql` 
 (you may have to put "-U postgres" after psql to set a user)
