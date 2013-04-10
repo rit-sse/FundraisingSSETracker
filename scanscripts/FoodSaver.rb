@@ -12,7 +12,7 @@ class FoodSaver
 		@conn.prepare('insert_in_inventory', 'insert into inventory (item_upc, amount, sold) values ($1, $2, $3);')
 		@conn.prepare('update_inventory', 'update inventory set amount = $1 where item_upc=$2;')
 		@conn.prepare('update_sold', 'update inventory set sold = $1 where item_upc=$2;')
-		@conn.prepare('insert_timestamp', 'insert into scans (item_upc, time, purchase) values ($1, $2, $3);')
+		@conn.prepare('insert_timestamp', 'insert into scans (item_upc, time, purchase, quantity) values ($1, $2, $3, $4);')
 	end
 
 	def save_new_item(item)
@@ -38,9 +38,9 @@ class FoodSaver
 		end
 	end
 
-	def add_scan_timestamp(upc, time, purchase)
+	def add_scan_timestamp(upc, time, purchase, quantity)
 		begin
-			@conn.exec_prepared('insert_timestamp', [upc, time, purchase])
+			@conn.exec_prepared('insert_timestamp', [upc, time, purchase, quantity])
 		rescue Exception => ex
 			puts "oh no database problem time to panic (#{ex.message})"
 		end
