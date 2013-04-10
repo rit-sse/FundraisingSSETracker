@@ -14,8 +14,9 @@ To Set Up:
 
 To Run the Scanning Script:
 ---------------------------
-1. `cd [repo_root]/scanscripts`
-2. `ruby ProgramStart.rb`
+1. Be connected to internet
+2. `cd [repo_root]/scanscripts`
+3. `ruby ProgramStart.rb`
 
 To Run the Webapp:
 ------------------
