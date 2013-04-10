@@ -1,8 +1,6 @@
 require './FoodParser.rb'
 
 class FoodItem
-
-
   def initialize(upc, number, name=nil)
     if name.nil?
       # correct for parity bit
@@ -12,14 +10,15 @@ class FoodItem
       @name = name
     end
 
-    @number = number.to_i
+    @stock = 0
+    @sold = number.to_i
     @upc = upc
   end
 
   attr_reader :upc, :number, :name
 
-  def add(value=1)
-    @number += value
+  def add(value=1,sales=false)
+    sales ? @sold += value : @stock += value
   end
 
   def upc_parity_fix(upc)
@@ -28,7 +27,7 @@ class FoodItem
   end
 
   def to_s
-    "#{@number}\t\"#{@name}\" (#{@upc})"
+    "#{@sold}/#{@stock}\t\"#{@name}\" (#{@upc})"
   end
 
 end

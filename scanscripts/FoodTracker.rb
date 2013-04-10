@@ -9,6 +9,7 @@ class FoodTracker
     @table = Hash.new
     @scans = Hash.new
     @saver = saver
+    @sales_mode = true
 
     sysout("Loading Food...")
     @table = @saver.load_item
@@ -19,7 +20,7 @@ class FoodTracker
   end
 
   def command_line
-    prompt = "(n)ew , (a)dd, (r)ead, (v)iew scan times, (q)uit \nput in a hash to remove one element of it, or add a new item to store it in the database.\n"
+    prompt = "(n)ew , (a)dd, (r)ead, (s)ales mode toggle, (v)iew scan times, (q)uit \nput in a hash to remove one element of it, or add a new item to store it in the database.\n"
     while(true) do
       puts
       sysout( prompt )
@@ -40,6 +41,8 @@ class FoodTracker
         shutdown
       when "v"
         list_scans
+      when "s"
+        @sales_mode = !@sales_mode
       else
         new_item(input)
       end
