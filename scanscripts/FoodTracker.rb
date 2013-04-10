@@ -62,7 +62,7 @@ class FoodTracker
 
     if @config.variety_packs.has_key?(upc)
       @config.variety_packs[upc].each do |item, amount|
-        new_item(item, amount)
+        new_item(item, number*amount)
       end
     else
       if not @purchase_mode
