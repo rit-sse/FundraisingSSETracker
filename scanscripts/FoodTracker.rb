@@ -41,6 +41,7 @@ class FoodTracker
         new_item
       when "q"
         shutdown
+        break
       when "v"
         list_scans
       when "p"
@@ -129,6 +130,6 @@ class FoodTracker
   def shutdown
     sysout("System going for shutdown")
     #Do I/O (save to file for example)
-    abort("Food Item Tracker Terminated")
+    puts("Food Item Tracker Terminated")
   end
 end
