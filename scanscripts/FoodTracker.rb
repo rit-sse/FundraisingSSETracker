@@ -28,6 +28,7 @@ class FoodTracker
       print ">> "
 
       input = gets.chomp
+      input = @config.get_upc(input) #filter for redirects
       abort("EOF, terminating program...") if input == nil
       input.downcase!
 
@@ -56,6 +57,7 @@ class FoodTracker
   end
 
   def new_item(upc=gets.chomp, number=1)
+    upc = @config.get_upc(upc)
     purchase_time = DateTime.now
 
     if @config.variety_packs.has_key?(upc)
