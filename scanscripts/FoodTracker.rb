@@ -73,16 +73,19 @@ class FoodTracker
 
   # Add any number of items
   def add_item_cmd
-    puts("item: ")
-    item = gets.chomp
+    puts("upc: ")
+    upc = gets.chomp
     puts("number: ")
     number = gets.chomp.to_i
-    add_item(@table[item], number)
+    add_item(upc, number)
   end
 
   # Add Item
-  def add_item(item, number=1)
-    item.add(number)
+  def add_item(upc, number=1)
+    if !@table.has_key?(upc)
+      new_item(upc)
+    end
+    @table[upc].add(number)
     @saver.update_item_amount(item.upc, item.number)
   end
 
