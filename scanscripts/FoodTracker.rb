@@ -15,7 +15,6 @@ class FoodTracker
     @table = @saver.load_item
     sysout("Loading Scan History...")
     @scans = @saver.load_scans
-
     sysout("Starting Food Tracker")
   end
 
@@ -54,7 +53,7 @@ class FoodTracker
     @scans.each {|upc, array| puts @table[upc].name; puts array}
   end
 
-  def new_item(upc=gets.chomp)
+  def new_item(upc=gets.chomp, number=1)
     scantime = DateTime.now
 
     if not @table.has_key?(upc)
@@ -63,10 +62,10 @@ class FoodTracker
       @saver.save_new_item(@table[upc])
       @scans[upc] = Array.new
     end
-    add_item(@table[upc])
+    add_item(upc, number)
 
     #add scan evidence to scan array
-    @scans[upc].push(scantime)
+    @scans[upc] << scantime
     @saver.add_scan_timestamp(upc, scantime, @purchase_mode )
     puts("#{@table[upc].name}")
   end
@@ -77,16 +76,14 @@ class FoodTracker
     upc = gets.chomp
     puts("number: ")
     number = gets.chomp.to_i
-    add_item(upc, number)
+    new_item(upc, number)
   end
 
   # Add Item
   def add_item(upc, number=1)
-    if !@table.has_key?(upc)
-      new_item(upc)
-    end
-    @table[upc].add(number)
-    @saver.update_item_amount(item.upc, item.number)
+    @table[upc].add(number, @purchase_mode)
+    num = @purchase_mode ? @table[upc].sold : @table[upc].stock
+    @saver.update_item_amount(@table[upc].upc, num, @purchase_mode)
   end
 
   # Read items
