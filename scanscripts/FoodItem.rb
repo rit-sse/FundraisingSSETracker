@@ -1,21 +1,21 @@
 require './FoodParser.rb'
 
 class FoodItem
-  def initialize(upc, number, name=nil)
+  def initialize(upc, stock, sold, name=nil)
     if name.nil?
       # correct for parity bit
       #upc = upc_parity_fix(upc) if upc.length == 7
-      @name = FoodParser.new.get(upc)  
+      @name = FoodParser.new.get(upc)
     else
       @name = name
     end
 
-    @stock = 0
-    @sold = number.to_i
+    @stock = stock.to_i
+    @sold = sold.to_i
     @upc = upc
   end
 
-  attr_reader :upc, :number, :name
+  attr_reader :upc, :stock, :sold, :name
 
   def add(value=1,sales=false)
     sales ? @sold += value : @stock += value

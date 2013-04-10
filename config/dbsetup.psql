@@ -9,10 +9,12 @@ CREATE TABLE IF NOT EXISTS items (
 
 CREATE TABLE IF NOT EXISTS scans (
 	item_upc		varchar(50),
-	time			timestamp with time zone
+	time			timestamp with time zone,
+	purchase		boolean
 );
 
 CREATE TABLE IF NOT EXISTS inventory (
 	item_upc		varchar(50),
-	amount			int
+	amount			int,
+	sold			int
 );
