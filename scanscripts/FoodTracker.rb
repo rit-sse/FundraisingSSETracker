@@ -1,5 +1,6 @@
 require './FoodItem.rb'
 require './FoodSaver.rb'
+require './FoodFilter.rb'
 
 # The Food Tracker Class is the CLI interface
 # which holds a Hash Table of FoodItems.
@@ -8,6 +9,7 @@ class FoodTracker
   def initialize(saver)
     @table = Hash.new
     @scans = Hash.new
+    @filter = FoodFilter.new #redirects upc codes
     @saver = saver
 
     sysout("Loading Food...")
@@ -26,6 +28,7 @@ class FoodTracker
       print ">> "
 
       input = gets.chomp
+      input = @filter.get_upc(input) #filter for redirects
       abort("EOF, terminating program...") if input == nil
       input.downcase!
 
@@ -51,6 +54,7 @@ class FoodTracker
   end
 
   def new_item(upc=gets.chomp)
+    upc = @filter.get_upc(upc)
     scantime = DateTime.now
 
     if not @table.has_key?(upc)
