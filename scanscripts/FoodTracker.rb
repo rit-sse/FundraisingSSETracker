@@ -74,27 +74,27 @@ class FoodTracker
           @saver.save_new_item(@table[upc])
         end
         add_item(upc, number)
-        record_scan_time(upc, purchase_time)
+        record_scan_time(upc, purchase_time, number)
       else
         if not @table.has_key?(upc)
           puts "This item is not in the database. Please contact fundraising@sse.se.rit.edu before buying the item."
         else
           puts "user is buying an item"
           add_item(upc, number)
-          record_scan_time(upc, purchase_time)
+          record_scan_time(upc, purchase_time, number)
         end
       end
     end
   end
 
-  def record_scan_time(upc, time)
+  def record_scan_time(upc, time, number)
     @scans[upc] = Array.new if not @scans[upc]
 
     #add scan evidence to scan database
     if (@scans[upc])
       puts "adding scan"
       @scans[upc] << time
-      @saver.add_scan_timestamp(upc, time, @purchase_mode)
+      @saver.add_scan_timestamp(upc, time, @purchase_mode, number)
     end
   end
 
