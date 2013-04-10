@@ -1,5 +1,6 @@
-require './FoodItem.rb'
-require './FoodSaver.rb'
+require './FoodItem'
+require './FoodSaver'
+require './FoodConfig'
 
 # The Food Tracker Class is the CLI interface
 # which holds a Hash Table of FoodItems.
@@ -9,6 +10,7 @@ class FoodTracker
     @table = Hash.new
     @scans = Hash.new
     @saver = saver
+    @config = FoodConfig.new
     @purchase_mode = true
 
     sysout("Loading Food...")
@@ -26,6 +28,7 @@ class FoodTracker
       print ">> "
 
       input = gets.chomp
+      input = @config.get_upc(input) #filter for redirects
       abort("EOF, terminating program...") if input == nil
       input.downcase!
 
@@ -50,29 +53,36 @@ class FoodTracker
   end
 
   def list_scans
-    @scans.each {|upc, array| puts @table[upc].name; puts array}
+    @scans.each {|upc, array| puts @table[upc].name; puts array.map{|x| "   #{x}" }}
   end
 
   def new_item(upc=gets.chomp, number=1)
+    upc = @config.get_upc(upc)
     purchase_time = DateTime.now
 
-    if not @purchase_mode
-      puts "fundraising is stocking the cabinet"
-
-      if not @table.has_key?(upc)
-        #create new food
-        @table[upc] = FoodItem.new(upc,0, 0)
-        @saver.save_new_item(@table[upc])
+    if @config.variety_packs.has_key?(upc)
+      @config.variety_packs[upc].each do |item, amount|
+        new_item(item, amount)
       end
-      add_item(upc, number)
-      record_scan_time(upc, purchase_time)
     else
-      if not @table.has_key?(upc)
-        puts "This item is not in the database. Please contact fundraising@sse.se.rit.edu before buying the item."
-      else
-        puts "user is buying an item"
-        add_item(upc)
+      if not @purchase_mode
+        puts "fundraising is stocking the cabinet"
+
+        if not @table.has_key?(upc)
+          #create new food
+          @table[upc] = FoodItem.new(upc,0, 0)
+          @saver.save_new_item(@table[upc])
+        end
+        add_item(upc, number)
         record_scan_time(upc, purchase_time)
+      else
+        if not @table.has_key?(upc)
+          puts "This item is not in the database. Please contact fundraising@sse.se.rit.edu before buying the item."
+        else
+          puts "user is buying an item"
+          add_item(upc, number)
+          record_scan_time(upc, purchase_time)
+        end
       end
     end
   end
