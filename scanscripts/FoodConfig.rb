@@ -42,6 +42,16 @@ class FoodConfig
     end
   end
 
+  def check_variety pack, array=Array.new
+    @variety_packs[pack].each_key do |item|
+      raise 'Your config is bad and you should feel bad' if array.include?(item)
+      if @variety_packs.has_key?(item)
+        array << item
+        check_variety item, array
+      end
+    end
+  end
+
   # returns either the original upc,
   # or returns a new upc if found in our config
   def get_upc(upc)
