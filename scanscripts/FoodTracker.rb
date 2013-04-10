@@ -9,7 +9,7 @@ class FoodTracker
     @table = Hash.new
     @scans = Hash.new
     @saver = saver
-    @sales_mode = true
+    @purchase_mode = true
 
     sysout("Loading Food...")
     @table = @saver.load_item
@@ -20,7 +20,7 @@ class FoodTracker
   end
 
   def command_line
-    prompt = "(n)ew , (a)dd, (r)ead, (s)ales mode toggle, (v)iew scan times, (q)uit \nput in a hash to remove one element of it, or add a new item to store it in the database.\n"
+    prompt = "(n)ew , (a)dd, (r)ead, (p)urchase mode toggle, (v)iew scan times, (q)uit \nput in a hash to remove one element of it, or add a new item to store it in the database.\n"
     while(true) do
       puts
       sysout( prompt )
@@ -41,8 +41,9 @@ class FoodTracker
         shutdown
       when "v"
         list_scans
-      when "s"
-        @sales_mode = !@sales_mode
+      when "p"
+        @purchase_mode = !@purchase_mode
+        sysout("Purchase mode #{@purchase_mode ? "on" : "off"}")
       else
         new_item(input)
       end
@@ -58,16 +59,15 @@ class FoodTracker
 
     if not @table.has_key?(upc)
       #create new food
-      @table[upc] = FoodItem.new(upc,1)
+      @table[upc] = FoodItem.new(upc,0, 0)
       @saver.save_new_item(@table[upc])
       @scans[upc] = Array.new
-    else
-      add_item(@table[upc])
     end
+    add_item(@table[upc])
 
     #add scan evidence to scan array
     @scans[upc].push(scantime)
-    @saver.add_scan_timestamp(upc, scantime)
+    @saver.add_scan_timestamp(upc, scantime, @purchase_mode )
     puts("#{@table[upc].name}")
   end
 
