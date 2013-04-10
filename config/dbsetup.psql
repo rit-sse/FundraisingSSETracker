@@ -4,12 +4,13 @@ CREATE TABLE IF NOT EXISTS items (
 	upc				varchar(50) PRIMARY KEY,
 	name			varchar(50) NOT NULL,
 	cost			money,
-	retail_price	money NOT NULL
+	retail_price	money NOT NULL,
 );
 
 CREATE TABLE IF NOT EXISTS scans (
 	item_upc		varchar(50),
-	time			timestamp with time zone
+	time			timestamp with time zone,
+	purchase		boolean
 );
 
 CREATE TABLE IF NOT EXISTS inventory (
