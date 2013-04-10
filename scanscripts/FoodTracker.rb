@@ -1,5 +1,6 @@
-require './FoodItem.rb'
-require './FoodSaver.rb'
+require './FoodItem'
+require './FoodSaver'
+require './FoodConfig'
 
 # The Food Tracker Class is the CLI interface
 # which holds a Hash Table of FoodItems.
@@ -9,6 +10,7 @@ class FoodTracker
     @table = Hash.new
     @scans = Hash.new
     @saver = saver
+    @config = FoodConfig.new
     @purchase_mode = true
 
     sysout("Loading Food...")
@@ -50,24 +52,29 @@ class FoodTracker
   end
 
   def list_scans
-    @scans.each {|upc, array| puts @table[upc].name; puts array}
+    @scans.each {|upc, array| puts @table[upc].name; puts array.map{|x| "   #{x}" }}
   end
 
   def new_item(upc=gets.chomp, number=1)
     scantime = DateTime.now
+    if @config.variety_packs.has_key?(upc)
+      @config.variety_packs[upc].each do |item, amount|
+        new_item(item, amount)
+      end
+    else
+      if not @table.has_key?(upc)
+        #create new food
+        @table[upc] = FoodItem.new(upc,0, 0)
+        @saver.save_new_item(@table[upc])
+        @scans[upc] = Array.new
+      end
+      add_item(upc, number)
 
-    if not @table.has_key?(upc)
-      #create new food
-      @table[upc] = FoodItem.new(upc,0, 0)
-      @saver.save_new_item(@table[upc])
-      @scans[upc] = Array.new
+      #add scan evidence to scan array
+      @scans[upc] << scantime
+      @saver.add_scan_timestamp(upc, scantime, @purchase_mode )
+      puts("#{@table[upc].name}")
     end
-    add_item(upc, number)
-
-    #add scan evidence to scan array
-    @scans[upc] << scantime
-    @saver.add_scan_timestamp(upc, scantime, @purchase_mode )
-    puts("#{@table[upc].name}")
   end
 
   # Add any number of items

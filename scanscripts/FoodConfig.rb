@@ -5,6 +5,8 @@ class FoodConfig
     init_redirect
   end
 
+  attr_accessor :variety_packs
+
   def init_variety
     @variety_packs = Hash.new
     pointer = ''
@@ -13,12 +15,13 @@ class FoodConfig
       if line =~ /^[#\n]/
         #do nothing
       elsif line =~ /^[0-9]/
-        # grab all digits and store in filter
+        # grab all digits of the variety box and create a hash for its contents
         pointer = line.gsub(/\D/, '')
         @variety_packs[pointer] = Hash.new
       elsif line =~ /^[\-]/
+        #Adds upc and quanity to the variety pack
         quantity = line.gsub(/-/, '').split
-        @variety_packs[pointer][quantity[0]] = quantity[1]
+        @variety_packs[pointer][quantity[0]] = quantity[1].to_i
       end
     end
   end
