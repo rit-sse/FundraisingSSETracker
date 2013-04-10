@@ -15,5 +15,6 @@ CREATE TABLE IF NOT EXISTS scans (
 
 CREATE TABLE IF NOT EXISTS inventory (
 	item_upc		varchar(50),
-	amount			int
+	amount			int,
+	sold			int
 );
