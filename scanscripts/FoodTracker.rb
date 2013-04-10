@@ -56,24 +56,43 @@ class FoodTracker
   end
 
   def new_item(upc=gets.chomp, number=1)
-    scantime = DateTime.now
+    purchase_time = DateTime.now
+
     if @config.variety_packs.has_key?(upc)
       @config.variety_packs[upc].each do |item, amount|
         new_item(item, amount)
       end
     else
-      if not @table.has_key?(upc)
-        #create new food
-        @table[upc] = FoodItem.new(upc,0, 0)
-        @saver.save_new_item(@table[upc])
-        @scans[upc] = Array.new
-      end
-      add_item(upc, number)
+      if not @purchase_mode
+        puts "fundraising is stocking the cabinet"
 
-      #add scan evidence to scan array
-      @scans[upc] << scantime
-      @saver.add_scan_timestamp(upc, scantime, @purchase_mode )
-      puts("#{@table[upc].name}")
+        if not @table.has_key?(upc)
+          #create new food
+          @table[upc] = FoodItem.new(upc,0, 0)
+          @saver.save_new_item(@table[upc])
+        end
+        add_item(upc, number)
+        record_scan_time(upc, purchase_time)
+      else
+        if not @table.has_key?(upc)
+          puts "This item is not in the database. Please contact fundraising@sse.se.rit.edu before buying the item."
+        else
+          puts "user is buying an item"
+          add_item(upc, number)
+          record_scan_time(upc, purchase_time)
+        end
+      end
+    end
+  end
+
+  def record_scan_time(upc, time)
+    @scans[upc] = Array.new if not @scans[upc]
+
+    #add scan evidence to scan database
+    if (@scans[upc])
+      puts "adding scan"
+      @scans[upc] << time
+      @saver.add_scan_timestamp(upc, time, @purchase_mode)
     end
   end
 
@@ -88,6 +107,7 @@ class FoodTracker
 
   # Add Item
   def add_item(upc, number=1)
+    # save the item to the database
     @table[upc].add(number, @purchase_mode)
     num = @purchase_mode ? @table[upc].sold : @table[upc].stock
     @saver.update_item_amount(@table[upc].upc, num, @purchase_mode)
