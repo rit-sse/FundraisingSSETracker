@@ -25,10 +25,16 @@ $.each(datasets, function(i, dataset){
             type: 'pie'
         },
         title:{
+            useHTML: true,
+            style: {
+                'white-space': 'normal'
+            },
+            align: 'left',
             text: dataset.name
         },
         tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+
+            pointFormat: 'Amount: <b>{point.y}</b>',
             percentageDecimals: 1
         },
         plotOptions: {
