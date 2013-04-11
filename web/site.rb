@@ -2,8 +2,11 @@ require 'sinatra/base'
 require 'pg'
 require '../DatabaseModels'
 
-class Site < Sinatra::Base
 
+
+class Site < Sinatra::Base
+  use Rack::Deflater
+  use ActiveRecord::ConnectionAdapters::ConnectionManagement
 	#pages
 	get '/' do
 		erb :index
@@ -12,6 +15,10 @@ class Site < Sinatra::Base
   get '/percent-purchased' do
     @items = Item.all
     erb :percent_purchased
+  end
+
+  after do
+    ActiveRecord::Base.connection.close
   end
 end
 
