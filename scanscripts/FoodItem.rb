@@ -1,6 +1,10 @@
 require './FoodParser.rb'
+require '../DatabaseConfiguration.rb'
 
 class FoodItem
+
+  attr_reader :upc, :stock, :sold, :name
+
   def initialize(upc, stock, sold, name=nil)
     if name.nil?
       # correct for parity bit
@@ -15,7 +19,7 @@ class FoodItem
     @upc = upc
   end
 
-  attr_reader :upc, :stock, :sold, :name
+  
 
   def add(value=1,sales=false)
     sales ? @sold += value : @stock += value
@@ -29,5 +33,15 @@ class FoodItem
   def to_s
     "#{@sold}/#{@stock}\t\"#{@name}\" (#{@upc})"
   end
+
+end
+
+class Item < ActiveRecord::Base
+  attr_reader :upc, :name, :cost, :retail_price
+  has_many :scans
+end 
+
+class Scans < ActiveRecord::Base
+  attr_reader :item_upc, :time, :purchase, :quantity
 
 end

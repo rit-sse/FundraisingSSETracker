@@ -9,14 +9,14 @@ class FoodTracker
   def initialize(saver)
     @table = Hash.new
     @scans = Hash.new
-    @saver = saver
+    #@saver = saver
     @config = FoodConfig.new
     @purchase_mode = true
 
     sysout("Loading Food...")
-    @table = @saver.load_item
+    #@table = @saver.load_item
     sysout("Loading Scan History...")
-    @scans = @saver.load_scans
+    #@scans = @saver.load_scans
     sysout("Starting Food Tracker")
   end
 
@@ -71,7 +71,7 @@ class FoodTracker
         if not @table.has_key?(upc)
           #create new food
           @table[upc] = FoodItem.new(upc,0, 0)
-          @saver.save_new_item(@table[upc])
+          #@saver.save_new_item(@table[upc])
         end
         add_item(upc, number)
         record_scan_time(upc, purchase_time, number)
@@ -94,7 +94,7 @@ class FoodTracker
     if (@scans[upc])
       puts "adding scan"
       @scans[upc] << time
-      @saver.add_scan_timestamp(upc, time, @purchase_mode, number)
+      #@saver.add_scan_timestamp(upc, time, @purchase_mode, number)
     end
   end
 
@@ -112,7 +112,7 @@ class FoodTracker
     # save the item to the database
     @table[upc].add(number, @purchase_mode)
     num = @purchase_mode ? @table[upc].sold : @table[upc].stock
-    @saver.update_item_amount(@table[upc].upc, num, @purchase_mode)
+    #@saver.update_item_amount(@table[upc].upc, num, @purchase_mode)
   end
 
   # Read items
