@@ -1,4 +1,4 @@
-require './FoodItem'
+require '../DatabaseModels'
 require './FoodParser'
 require './FoodConfig'
 

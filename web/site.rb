@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require 'pg'
+require '../DatabaseModels'
 
 class Site < Sinatra::Base
 
