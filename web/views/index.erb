@@ -1,18 +1,16 @@
 <div class="container">
   <h1>Inventory</h1>
   <table class="table table-striped table-bordered">
-    <tr><th>Name</th><th>UPC Code</th><th>Cost/Item</th><th>Retail Price</th><th>Number of Scans</th></tr>
-      <% conn = PG.connect(:dbname => 'fundraising')
-      items = conn.exec('select * from items, inventory where items.upc = inventory.item_upc;')
-      items.each do |item| %>
+    <tr><th>Name</th><th>UPC Code</th><th>Cost/Item</th><th>Retail Price</th><th>Amount Sold</th><th>Total</th></tr>
+      <% Item.all.each do |item| %>
         <tr>
-          <td><%= item["name"] %></td>
-          <td><%= item['upc'] %></td>
-          <td><%= item['cost'] %></td>
-          <td><%= item['retail_price'] %></td>
-          <td><%= item['amount'] %></td>
+          <td><%= item.name %></td>
+          <td><%= item.upc%></td>
+          <td><%= item.cost %></td>
+          <td><%= item.retail_price%></td>
+          <td><%= item.inventory.sold %></td>
+          <td><%= item.inventory.amount %></td>
         </tr>
-    <% end
-    conn.close %>
+    <% end %>
   </table>
 </div>

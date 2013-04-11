@@ -1,4 +1,4 @@
-require './FoodItem'
+require '../DatabaseModels'
 require './FoodParser'
 require './FoodConfig'
 
@@ -66,13 +66,16 @@ class FoodTracker
       end
     else
       item = Item.find_by_upc(upc)
-      
       if not @purchase_mode
         puts "fundraising is stocking the cabinet"
         if not item #create new food if it doesnt exist already
           item = @config.dummy[upc]
           name =  item.nil? ? FoodParser::get(upc) : item[:name]
-          item = Item.create(:upc=>upc, :name=>name, :cost=>0, :retail_price=>0)
+          puts("#{name}'s cost: ")
+          cost = gets.chomp.to_f
+          puts("#{name}'s retail price: ")
+          retail_price = gets.chomp.to_f
+          item = Item.create(:upc=>upc, :name=>name, :cost=>cost, :retail_price=>retail_price)
         end
         update_item_amount(item, number)
         record_scan_time(item.id, scan_time, number)
@@ -110,8 +113,8 @@ class FoodTracker
 
     if @purchase_mode
       Inventory.update(inventory.id, :sold=>"#{inventory.sold + amount}")
-    else 
-      Inventory.update(inventory.id, :amount=>"#{inventory.amount + amount}") 
+    else
+      Inventory.update(inventory.id, :amount=>"#{inventory.amount + amount}")
     end
   end
 

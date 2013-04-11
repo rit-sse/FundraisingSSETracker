@@ -1,4 +1,4 @@
-require '../DatabaseConfiguration.rb'
+require '../DatabaseConfiguration'
 
 class Item < ActiveRecord::Base
   attr_accessible :upc, :name, :cost, :retail_price
