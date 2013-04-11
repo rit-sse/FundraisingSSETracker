@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS scans (
 	quantity		int
 );
 
-CREATE TABLE IF NOT EXISTS inventory (
+CREATE TABLE IF NOT EXISTS inventories (
+	id				SERIAL PRIMARY KEY,
 	item_id			int NOT NULL,
 	amount			int,
 	sold			int

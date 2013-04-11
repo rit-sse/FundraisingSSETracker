@@ -80,8 +80,13 @@ class FoodTracker
         if not item
           puts "This item is not in the database. Please contact fundraising@sse.se.rit.edu before buying the item."
         else
-          record_scan_time(item.id, scan_time, number)
-          update_item_amount(item, number)
+          inventory = item.inventory
+          if (inventory.amount - inventory.sold > 0)
+            record_scan_time(item.id, scan_time, number)
+            update_item_amount(item, number)
+          else
+            puts "Inventory is out of sync - please contact fundraising@sse.se.rit.edu"
+          end
         end
       end
     end
@@ -112,7 +117,7 @@ class FoodTracker
 
   # Read items
   def read_items
-    Item.scoped.each {|x| puts x}
+    Item.scoped.each {|x| puts "#{x}\t(#{x.inventory.amount - x.inventory.sold} remaining)"}
   end
 
   # System IO for future debugging
