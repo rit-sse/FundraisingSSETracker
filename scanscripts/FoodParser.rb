@@ -2,10 +2,11 @@ require 'open-uri'
 require 'Nokogiri'
 
 
-class FoodParser
+module FoodParser
 	# Calls upcdatabase.com and gets the HTML of the item's upc page.
 	# then searches for the "Description" td and grabs the items corresponding description
 	# that is usually the name
+  extend self
 	def get(upc)
 		result = Nokogiri::HTML(open("http://www.upcdatabase.com/item/" + upc)).at('td:contains("Description")')
 		#for some reason theres a blank td after description
