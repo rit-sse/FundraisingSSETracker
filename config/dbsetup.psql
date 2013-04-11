@@ -1,21 +1,21 @@
 CREATE DATABASE fundraising;
 \c fundraising
 CREATE TABLE IF NOT EXISTS items (
-	upc				varchar(50) PRIMARY KEY,
+	upc				varchar(50) NOT NULL,
 	name			varchar(50) NOT NULL,
 	cost			money,
 	retail_price	money NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS scans (
-	item_upc		varchar(50),
+	item_upc		varchar(50) NOT NULL,
 	time			timestamp with time zone,
 	purchase		boolean,
 	quantity		int
 );
 
 CREATE TABLE IF NOT EXISTS inventory (
-	item_upc		varchar(50),
+	item_upc		varchar(50) NOT NULL,
 	amount			int,
 	sold			int
 );
