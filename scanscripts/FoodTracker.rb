@@ -71,7 +71,9 @@ class FoodTracker
 
         if not @table.has_key?(upc)
           #create new food
-          @table[upc] = FoodItem.new(upc,0, 0)
+          item = @config.dummy[upc]
+          name =  item[:name] if not item.nil?
+          @table[upc] = FoodItem.new(upc,0, 0, name)
           @saver.save_new_item(@table[upc])
         end
         add_item(upc, number)

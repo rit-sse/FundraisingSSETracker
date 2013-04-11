@@ -6,9 +6,10 @@ class FoodConfig
       check_variety pack
     end
     init_redirect
+    init_dummy
   end
 
-  attr_accessor :variety_packs
+  attr_accessor :variety_packs, :dummy
 
   def init_variety
     @variety_packs = Hash.new
@@ -42,6 +43,14 @@ class FoodConfig
         # grab all digits and store in hash, redirecting to pointer
         @redirect[line.gsub(/\D/, '')] = pointer.gsub(/\D/, '')
       end
+    end
+  end
+
+  def init_dummy
+    @dummy= Hash.new
+    File.open('./configs/dummy.config').each do |line|
+      line_split = line.split(/,/)
+      @dummy[line_split[0]] = {name:line_split[1], price:line_split[2]}
     end
   end
 
