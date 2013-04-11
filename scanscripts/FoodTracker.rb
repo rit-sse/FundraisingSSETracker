@@ -1,22 +1,15 @@
 require './FoodItem'
-require './FoodSaver'
+require './FoodParser'
 require './FoodConfig'
 
 # The Food Tracker Class is the CLI interface
 # which holds a Hash Table of FoodItems.
 class FoodTracker
 
-  def initialize(saver)
-    @table = Hash.new
-    @scans = Hash.new
-    #@saver = saver
+  def initialize()
     @config = FoodConfig.new
     @purchase_mode = true
 
-    sysout("Loading Food...")
-    #@table = @saver.load_item
-    sysout("Loading Scan History...")
-    #@scans = @saver.load_scans
     sysout("Starting Food Tracker")
   end
 
@@ -52,50 +45,45 @@ class FoodTracker
     end
   end
 
+  #list all the valid scans made by item
   def list_scans
-    @scans.each {|upc, array| puts @table[upc].name; puts array.map{|x| "   #{x}" }}
+    Item.scoped.each {|i|
+      puts i.name
+      i.scans.each {|x| puts "\t#{x}"}
+      puts ""
+    }
   end
 
   def new_item(upc=gets.chomp, number=1)
     upc = @config.get_upc(upc)
-    purchase_time = DateTime.now
+    scan_time = DateTime.now
 
+    # break down variety packs
     if @config.variety_packs.has_key?(upc)
       @config.variety_packs[upc].each do |item, amount|
         new_item(item, number*amount)
       end
     else
+      item = Item.find_by_upc(upc)
       if not @purchase_mode
         puts "fundraising is stocking the cabinet"
 
-        if not @table.has_key?(upc)
-          #create new food
-          @table[upc] = FoodItem.new(upc,0, 0)
-          #@saver.save_new_item(@table[upc])
+        if not item #create new food if it doesnt exist already
+          item = Item.create(:upc=>upc, :name=>FoodParser.new.get(upc), :cost=>0, :retail_price=>0)
         end
-        add_item(upc, number)
-        record_scan_time(upc, purchase_time, number)
+        record_scan_time(item.id, scan_time, number)
       else
-        if not @table.has_key?(upc)
+        if not item
           puts "This item is not in the database. Please contact fundraising@sse.se.rit.edu before buying the item."
         else
-          puts "user is buying an item"
-          add_item(upc, number)
-          record_scan_time(upc, purchase_time, number)
+          record_scan_time(item.id, scan_time, number)
         end
       end
     end
   end
 
-  def record_scan_time(upc, time, number)
-    @scans[upc] = Array.new if not @scans[upc]
-
-    #add scan evidence to scan database
-    if (@scans[upc])
-      puts "adding scan"
-      @scans[upc] << time
-      #@saver.add_scan_timestamp(upc, time, @purchase_mode, number)
-    end
+  def record_scan_time(id, time, number)
+    Scan.create(:item_id=>id, :time=>time, :purchase=>@purchase_mode, :quantity=>number)
   end
 
   # Add any number of items
@@ -109,6 +97,7 @@ class FoodTracker
 
   # Add Item
   def add_item(upc, number=1)
+
     # save the item to the database
     @table[upc].add(number, @purchase_mode)
     num = @purchase_mode ? @table[upc].sold : @table[upc].stock
@@ -117,7 +106,7 @@ class FoodTracker
 
   # Read items
   def read_items
-    @table.each {|key,value| puts value}
+    Item.scoped.each {|x| puts x}
   end
 
   # System IO for future debugging
