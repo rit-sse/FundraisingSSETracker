@@ -1,0 +1,49 @@
+<% (Item.all.count/4.0).ceil.times do |x| %>
+    <div class="row">
+        <div class="span3"></div>
+        <div class="span3"></div>
+        <div class="span3"></div>
+        <div class="span3"></div>
+    </div>
+<% end %>
+<script>
+var charts = [],
+    $containers = $('.row div.span3'),
+    datasets = [
+    <% items = Item.all
+    items.each do |item| %>
+        {
+            name: "<%= item.name %>",
+            data:[['Purchased', <%= item.inventory.sold %>],
+                  ['Not Purchased', <%= item.inventory.amount - item.inventory.sold %> ] ]
+        }<% unless items.last == item %>, <%end%>
+    <% end %>
+    ];
+
+$.each(datasets, function(i, dataset){
+    charts.push(new Highcharts.Chart({
+        chart :{
+            renderTo: $containers[i],
+            type: 'pie'
+        },
+        title:{
+            text: dataset.name
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+            percentageDecimals: 1
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: false
+                }
+            }
+        },
+        series: [dataset]
+
+    }));
+});
+</script>

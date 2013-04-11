@@ -8,6 +8,10 @@ class Site < Sinatra::Base
 	get '/' do
 		erb :index
 	end
+
+  get '/percent-purchased' do
+    erb :percent_purchased
+  end
 end
 
 Site.run! if $0 == __FILE__
