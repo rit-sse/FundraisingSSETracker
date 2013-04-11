@@ -66,6 +66,7 @@ class FoodTracker
       end
     else
       item = Item.find_by_upc(upc)
+      
       if not @purchase_mode
         puts "fundraising is stocking the cabinet"
         if not item #create new food if it doesnt exist already
@@ -73,12 +74,19 @@ class FoodTracker
           name =  item.nil? ? FoodParser::get(upc) : item[:name]
           item = Item.create(:upc=>upc, :name=>name, :cost=>0, :retail_price=>0)
         end
+        update_item_amount(item, number)
         record_scan_time(item.id, scan_time, number)
       else
         if not item
           puts "This item is not in the database. Please contact fundraising@sse.se.rit.edu before buying the item."
         else
-          record_scan_time(item.id, scan_time, number)
+          inventory = item.inventory
+          if (inventory.amount - inventory.sold > 0)
+            record_scan_time(item.id, scan_time, number)
+            update_item_amount(item, number)
+          else
+            puts "Inventory is out of sync - please contact fundraising@sse.se.rit.edu"
+          end
         end
       end
     end
@@ -97,18 +105,19 @@ class FoodTracker
     new_item(upc, number)
   end
 
-  # Add Item
-  def add_item(upc, number=1)
+  def update_item_amount(item, amount)
+    inventory = item.inventory.nil? ? Inventory.create(:item_id=>item.id, :amount=>0, :sold=>0) : item.inventory
 
-    # save the item to the database
-    @table[upc].add(number, @purchase_mode)
-    num = @purchase_mode ? @table[upc].sold : @table[upc].stock
-    #@saver.update_item_amount(@table[upc].upc, num, @purchase_mode)
+    if @purchase_mode
+      Inventory.update(inventory.id, :sold=>"#{inventory.sold + amount}")
+    else 
+      Inventory.update(inventory.id, :amount=>"#{inventory.amount + amount}") 
+    end
   end
 
   # Read items
   def read_items
-    Item.scoped.each {|x| puts x}
+    Item.scoped.each {|x| puts "#{x}\t(#{x.inventory.amount - x.inventory.sold} remaining)"}
   end
 
   # System IO for future debugging
