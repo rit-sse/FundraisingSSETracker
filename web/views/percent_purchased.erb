@@ -1,22 +1,20 @@
-<% (Item.all.count/4.0).ceil.times do |x| %>
+<% @items.each_slice(4) do |items| %>
     <div class="row">
-        <div class="span3"></div>
-        <div class="span3"></div>
-        <div class="span3"></div>
-        <div class="span3"></div>
+        <% items.each do |item| %>
+        <div id="<%=item.upc %>" class="span3"></div>
+        <%end%>
     </div>
 <% end %>
 <script>
 var charts = [],
     $containers = $('.row div.span3'),
     datasets = [
-    <% items = Item.all
-    items.each do |item| %>
+    <% @items.each do |item| %>
         {
             name: "<%= item.name %>",
             data:[['Purchased', <%= item.inventory.sold %>],
                   ['Not Purchased', <%= item.inventory.amount - item.inventory.sold %> ] ]
-        }<% unless items.last == item %>, <%end%>
+        }<% unless @items.last == item %>, <%end%>
     <% end %>
     ];
 

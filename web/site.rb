@@ -10,6 +10,7 @@ class Site < Sinatra::Base
 	end
 
   get '/percent-purchased' do
+    @items = Item.all
     erb :percent_purchased
   end
 end
