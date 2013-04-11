@@ -2,6 +2,9 @@ class FoodConfig
 
   def initialize
     init_variety
+    @variety_packs.each_key do |pack|
+      check_variety pack
+    end
     init_redirect
   end
 
@@ -42,14 +45,20 @@ class FoodConfig
     end
   end
 
+  def check_variety pack, array=Array.new
+    @variety_packs[pack].each_key do |item|
+      abort('Your config is bad and you should feel bad.') if array.include?(item)
+      if @variety_packs.has_key?(item)
+        array << item
+        check_variety item, array
+      end
+    end
+  end
+
   # returns either the original upc,
   # or returns a new upc if found in our config
   def get_upc(upc)
-    if @redirect.has_key?(upc)
-      return @redirect[upc]
-    end
-
-    return upc
+    @redirect.has_key?(upc) ? @redirect[upc] : upc
   end
 
 end
