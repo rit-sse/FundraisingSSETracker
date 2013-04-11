@@ -5,7 +5,7 @@ class FoodItem
     if name.nil?
       # correct for parity bit
       #upc = upc_parity_fix(upc) if upc.length == 7
-      @name = FoodParser.new.get(upc)
+      @name = FoodParser::get(upc)
     else
       @name = name
     end
