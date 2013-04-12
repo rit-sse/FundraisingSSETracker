@@ -3,7 +3,7 @@ CREATE DATABASE fundraising;
 CREATE TABLE IF NOT EXISTS items (
 	id				SERIAL PRIMARY KEY,
 	upc				varchar(50) NOT NULL,
-	name			varchar(50) NOT NULL,
+	name			varchar(100) NOT NULL,
 	cost			money,
 	retail_price	money NOT NULL
 );

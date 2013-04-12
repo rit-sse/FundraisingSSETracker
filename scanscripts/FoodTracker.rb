@@ -65,7 +65,7 @@ class FoodTracker
         new_item(item, number*amount)
       end
     else
-      item = Item.find_by_upc(upc)
+      item = Item.find_by_upc(upc.downcase)
       if not @purchase_mode
         puts "fundraising is stocking the cabinet"
         if not item #create new food if it doesnt exist already
