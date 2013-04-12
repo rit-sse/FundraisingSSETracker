@@ -1,6 +1,6 @@
 # Initiation file for the Food Inventory Tracker
 
-require './FoodTracker.rb'
+require './FoodTracker'
 
 ft = FoodTracker.new
 ft.command_line
