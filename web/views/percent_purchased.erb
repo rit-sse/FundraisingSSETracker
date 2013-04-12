@@ -1,3 +1,15 @@
+<div class="btn-group">
+  <a class="btn btn-primary"><i class="icon-calendar icon-white"></i> Sort By</a>
+  <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+  <ul class="dropdown-menu">
+    <li id="day"><a href="#"><i class="icon-hand-right"></i> Day</a></li>
+    <li id="week"><a href="#"><i class="icon-hand-right"></i> Week</a></li>
+    <li id="month"><a href="#"><i class="icon-hand-right"></i> Month</a></li>
+    <li id="year"><a href="#"><i class="icon-hand-right"></i> Year</a></li>
+    <li id="alltime"><a href="#"><i class="icon-hand-right"></i> All Time</a></li>
+  </ul>
+</div>
+
 <% @items.each_slice(4) do |items| %>
     <div class="row">
         <% items.each do |item| %>
@@ -27,9 +39,11 @@ $.each(datasets, function(i, dataset){
         title:{
             useHTML: true,
             style: {
-                'white-space': 'normal'
+                'white-space': 'normal',
+                'width':'200px',
+                'left':'0px',
+                'font-weight':'bold'
             },
-            align: 'left',
             text: dataset.name
         },
         tooltip: {
@@ -50,4 +64,55 @@ $.each(datasets, function(i, dataset){
 
     }));
 });
+$('#day').click(function(){
+    <% @items.each do |item| %>
+        var chart = $(charts)[$('#<%=item.upc %>').data()['highchartsChart']];
+        <% sold = Scan.where(item_id: item.id, purchase: true, time: Date.today.to_datetime..Date.today.next_day.to_datetime ).inject(0){|sum, x| sum+= x.quantity}
+            amount = Scan.where(item_id: item.id, purchase: false, time: Date.today.to_datetime..Date.today.next_day.to_datetime ).inject(0){|sum, x| sum+= x.quantity} - sold
+            amount = 0 if amount < 0 %>
+        chart.series[0].data[0].update(<%= sold %> );
+        chart.series[0].data[1].update(<%= amount %> );
+        chart.redraw();
+    <% end %>
+});
+$('#week').click(function(){
+    <% @items.each do |item| %>
+        var chart = $(charts)[$('#<%=item.upc %>').data()['highchartsChart']];
+        <% sold = Scan.where(item_id: item.id, purchase: true, time: (Date.today - 7).to_datetime..Date.today.next_day.to_datetime ).inject(0){|sum, x| sum+= x.quantity}
+            amount = Scan.where(item_id: item.id, purchase: false, time: (Date.today - 7).to_datetime..Date.today.next_day.to_datetime ).inject(0){|sum, x| sum+= x.quantity} - sold 
+            amount = 0 if amount < 0 %>
+        chart.series[0].data[0].update(<%= sold %>);
+        chart.series[0].data[1].update(<%= amount %> );
+    <% end %>
+});
+$('#month').click(function(){
+    <% @items.each do |item| %>
+        var chart = $(charts)[$('#<%=item.upc %>').data()['highchartsChart']];
+        <% sold = Scan.where(item_id: item.id, purchase: true, time: Date.today.prev_month.to_datetime..Date.today.next_day.to_datetime ).inject(0){|sum, x| sum+= x.quantity}
+            amount = Scan.where(item_id: item.id, purchase: false, time: Date.today.prev_month.to_datetime..Date.today.next_day.to_datetime ).inject(0){|sum, x| sum+= x.quantity} - sold
+            amount = 0 if amount < 0 %>
+        chart.series[0].data[0].update(<%= sold %> );
+        chart.series[0].data[1].update(<%= amount %> );
+    <% end %>
+});
+$('#year').click(function(){
+    <% @items.each do |item| %>
+        var chart = $(charts)[$('#<%=item.upc %>').data()['highchartsChart']];
+        <% sold = Scan.where(item_id: item.id, purchase: true, time: Date.today.prev_year.to_datetime..Date.today.next_day.to_datetime ).inject(0){|sum, x| sum+= x.quantity}
+            amount = Scan.where(item_id: item.id, purchase: false, time: Date.today.prev_year.to_datetime..Date.today.next_day.to_datetime ).inject(0){|sum, x| sum+= x.quantity} - sold
+            amount = 0 if amount < 0 %>
+        chart.series[0].data[0].update(<%= sold %> );
+        chart.series[0].data[1].update(<%= amount %> );
+    <% end %>
+});
+$('#alltime').click(function(){
+    <% @items.each do |item| %>
+        var chart = $(charts)[$('#<%=item.upc %>').data()['highchartsChart']];
+        <% sold = Scan.where(item_id: item.id, purchase: true ).inject(0){|sum, x| sum+= x.quantity}
+            amount = Scan.where(item_id: item.id, purchase: false).inject(0){|sum, x| sum+= x.quantity} - sold %>
+        chart.series[0].data[0].update(<%= sold %> );
+        chart.series[0].data[1].update(<%= amount %> );
+    <% end %>
+});
+
 </script>
