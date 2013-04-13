@@ -5,6 +5,7 @@ hash = Hash.new
   method = (@data_shown + "_helper").to_sym
   info = self.send(method, item)
   hash[item.upc]['id'] = item.id
+  hash[item.upc]['name'] = item.name
   hash[item.upc]['purchased'] = info[0]
   hash[item.upc]['not purchased'] = info[1]
 end
