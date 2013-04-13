@@ -1,6 +1,6 @@
 require 'sinatra/base'
-require 'pg'
 require '../DatabaseModels'
+require './helper'
 
 
 
@@ -15,6 +15,12 @@ class Site < Sinatra::Base
   get '/percent-purchased' do
     @items = Item.all
     erb :percent_purchased
+  end
+
+  get '/percent-purchased-data' do
+    @items = Item.all
+    @data_shown = params[:data_shown]
+    erb :"percent-purchased-data", layout: false
   end
 
   after do
