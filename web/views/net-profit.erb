@@ -1,0 +1,31 @@
+<div id="highchart-chart" style="height: 500px; min-width: 500px"></div>
+<script>
+var datasets = [
+  <% hash = parse_scans
+     hash.each do |day, amount| %>
+    [<%="#{day}"%>,<%="#{amount}"%>]
+    <% unless hash.keys.last == day %>,<%end%>
+  <% end %>
+  
+];
+
+$('#highchart-chart').highcharts('StockChart', {
+  rangeSelector : {
+    selected : 1
+  },
+
+  title : {
+    text : 'Profit over time'
+  },
+  
+  series : [{
+    name : 'Profit',
+    data : datasets,
+    tooltip: {
+      valueDecimals: 2
+    }
+  }]
+});
+
+
+</script>

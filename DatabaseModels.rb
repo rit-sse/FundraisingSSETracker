@@ -11,7 +11,8 @@ class Item < ActiveRecord::Base
 end
 
 class Scan < ActiveRecord::Base
-  attr_accessible :item_id, :time, :purchase, :quantity
+  attr_accessible :time, :purchase, :quantity
+  belongs_to :item
 
   def to_s
    "#{time}\t#{quantity} items (#{purchase ? "sale" : "inventory stock"})"
@@ -19,6 +20,7 @@ class Scan < ActiveRecord::Base
 end
 
 class Inventory < ActiveRecord::Base
-  attr_accessible :item_id, :amount, :sold
+  attr_accessible :amount, :sold
+  belongs_to :item
 end
 
