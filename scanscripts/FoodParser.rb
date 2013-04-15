@@ -10,7 +10,7 @@ module FoodParser
 	def get(upc)
 		result = Nokogiri::HTML(open("http://www.upcdatabase.com/item/" + upc)).at('td:contains("Description")')
 		#for some reason theres a blank td after description
-		result.nil? ? alt_name : result.next.next.text.gsub(/"/,'\"')
+		result.nil? ? alt_name : result.next.next.text
 	end
 	
 	def alt_name

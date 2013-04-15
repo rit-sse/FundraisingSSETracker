@@ -70,7 +70,7 @@ class FoodTracker
         puts "fundraising is stocking the cabinet"
         if not item #create new food if it doesnt exist already
           item = @config.dummy[upc]
-          name =  item.nil? ? FoodParser::get(upc) : item[:name]
+          name =  item.nil? ? FoodParser::get(upc) : item[:name.gsub(/"/,"\"")]
           puts("#{name}'s cost: ")
           cost = gets.chomp.to_f
           puts("#{name}'s retail price: ")
