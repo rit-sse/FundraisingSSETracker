@@ -48,9 +48,7 @@ $.each(datasets, function(i, dataset){
             text: dataset.name
         },
         tooltip: {
-
-            pointFormat: 'Amount: <b>{point.y}</b>',
-            percentageDecimals: 1
+            pointFormat: 'Amount: <b>{point.y}</b>'
         },
         plotOptions: {
             pie: {
@@ -119,7 +117,7 @@ function checkUpdates(){
             var dataObject = JSON.parse(data);
             $.each(dataObject, function(i, item){
                 if($('#'+item['id']).data() == null){
-                    if($('.row').last().children().length == 4){
+                    if($('.row').length == 0 || $('.row').last().children().length == 4){
                         $('.container').append('<div class="row"></div>');
                     }
                     $('.row:last').append('<div id="'+ item['id'] + '" class="span3"></div>');
@@ -139,9 +137,7 @@ function checkUpdates(){
                             text: item['name']
                         },
                         tooltip: {
-
-                            pointFormat: 'Amount: <b>{point.y}</b>',
-                            percentageDecimals: 1
+                            pointFormat: 'Amount: <b>{point.y}</b>'
                         },
                         plotOptions: {
                             pie: {
