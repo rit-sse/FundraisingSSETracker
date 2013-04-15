@@ -67,7 +67,7 @@ $.each(datasets, function(i, dataset){
 });
 $('#day').click(function(){
     <% @items.each do |item| %>
-        var chart = $(charts)[$('#<%=item.id %>').data()['highchartsChart']];
+        var chart = Highcharts.charts[$('#<%=item.id %>').data()['highchartsChart']];
         <% info = day_helper(item) %>
         chart.series[0].data[0].update(<%= info[0] %>);
         chart.series[0].data[1].update(<%= info[1] %>);
@@ -76,7 +76,7 @@ $('#day').click(function(){
 });
 $('#week').click(function(){
     <% @items.each do |item| %>
-        var chart = $(charts)[$('#<%=item.id %>').data()['highchartsChart']];
+        var chart = Highcharts.charts[$('#<%=item.id %>').data()['highchartsChart']];
         <% info = week_helper(item) %>
         chart.series[0].data[0].update(<%= info[0] %>);
         chart.series[0].data[1].update(<%= info[1] %>);
@@ -85,7 +85,7 @@ $('#week').click(function(){
 });
 $('#month').click(function(){
     <% @items.each do |item| %>
-        var chart = $(charts)[$('#<%=item.id %>').data()['highchartsChart']];
+        var chart = Highcharts.charts[$('#<%=item.id %>').data()['highchartsChart']];
         <% info = month_helper(item) %>
         chart.series[0].data[0].update(<%= info[0] %>);
         chart.series[0].data[1].update(<%= info[1] %>);
@@ -94,7 +94,7 @@ $('#month').click(function(){
 });
 $('#year').click(function(){
     <% @items.each do |item| %>
-        var chart = $(charts)[$('#<%=item.id %>').data()['highchartsChart']];
+        var chart = Highcharts.charts[$('#<%=item.id %>').data()['highchartsChart']];
         <% info = year_helper(item) %>
         chart.series[0].data[0].update(<%= info[0] %>);
         chart.series[0].data[1].update(<%= info[1] %>);
@@ -103,7 +103,7 @@ $('#year').click(function(){
 });
 $('#alltime').click(function(){
     <% @items.each do |item| %>
-        var chart = $(charts)[$('#<%=item.id %>').data()['highchartsChart']];
+        var chart = Highcharts.charts[$('#<%=item.id %>').data()['highchartsChart']];
         <% info = alltime_helper(item) %>
         chart.series[0].data[0].update(<%= info[0] %>);
         chart.series[0].data[1].update(<%= info[1] %>);
