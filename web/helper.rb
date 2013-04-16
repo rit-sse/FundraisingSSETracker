@@ -31,3 +31,13 @@ def alltime_helper item
   amount = Scan.where(item_id: item.id, purchase: false).inject(0){|sum, x| sum+= x.quantity} - sold
   [sold, amount]
 end
+
+def parse_scans
+  hash = Hash.new(0)
+  @scans.sort_by{|x| x.time}.each do |scan|
+    scan.time.to_date.upto(Date.today) do |date|
+      hash[date.to_time.to_i*1000] += scan.purchase ? scan.item.cost : -scan.item.retail_price
+    end
+  end
+  hash
+end
