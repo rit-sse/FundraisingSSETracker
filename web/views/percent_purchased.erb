@@ -19,8 +19,7 @@
 <% end %>
 <script>
 var dataShown = 'alltime';
-var
-    $containers = $('.row div.span3'),
+var $containers = $('.row div.span3'),
     datasets = [
     <% @items.each do |item| %>
         {
@@ -165,6 +164,6 @@ function checkUpdates(){
     });
 }
 $(document).ready(function() {
-    setInterval("checkUpdates()", 3000);  // Calls the function every 3 seconds
+    setInterval("checkUpdates()", 1000);  // Calls the function every 3 seconds
 });
 </script>

@@ -23,6 +23,17 @@ class Site < Sinatra::Base
     erb :"percent-purchased-data", layout: false
   end
 
+  get '/net-profit' do
+    @scans = Scan.all
+    erb :"net-profit"
+  end
+
+   get '/net-profit-data' do
+    @scans = Scan.all
+    erb :"net-profit-data", layout: false
+  end
+
+
   after do
     ActiveRecord::Base.connection.close
   end

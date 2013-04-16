@@ -66,6 +66,7 @@ class FoodTracker
       end
     else
       item = Item.find_by_upc(upc.downcase)
+      puts item
       if not @purchase_mode
         puts "fundraising is stocking the cabinet"
         if not item #create new food if it doesnt exist already
@@ -76,17 +77,17 @@ class FoodTracker
           cost = gets.chomp.to_f
           puts("#{name}'s retail price: ")
           retail_price = gets.chomp.to_f
-          item = Item.create(:upc=>upc, :name=>name, :cost=>cost, :retail_price=>retail_price)
+          item = Item.create(upc: upc, name: name, cost: cost, retail_price: retail_price)
         end
         update_item_amount(item, number)
-        record_scan_time(item.id, scan_time, number)
+        record_scan_time(item, scan_time, number)
       else
         if not item
           puts "This item is not in the database. Please contact fundraising@sse.se.rit.edu before buying the item."
         else
           inventory = item.inventory
           if (inventory.amount - inventory.sold > 0)
-            record_scan_time(item.id, scan_time, number)
+            record_scan_time(item, scan_time, number)
             update_item_amount(item, number)
           else
             puts "Inventory is out of sync - please contact fundraising@sse.se.rit.edu"
@@ -96,8 +97,10 @@ class FoodTracker
     end
   end
 
-  def record_scan_time(id, time, number)
-    Scan.create(:item_id=>id, :time=>time, :purchase=>@purchase_mode, :quantity=>number)
+  def record_scan_time(item, time, number)
+    scan = Scan.new(time: time, purchase: @purchase_mode, quantity: number)
+    scan.item = item
+    scan.save
   end
 
   # Add any number of items

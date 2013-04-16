@@ -1,0 +1,44 @@
+<div id="highchart-chart" style="height: 500px; min-width: 500px"></div>
+<script>
+var datasets = [
+  <% hash = parse_scans
+     hash.each do |day, amount| %>
+    [<%="#{day}"%>,<%="#{amount}"%>]
+    <% unless hash.keys.last == day %>,<%end%>
+  <% end %>
+];
+
+$('#highchart-chart').highcharts('StockChart', {
+  rangeSelector : {
+    selected : 1
+  },
+
+  title : {
+    text : 'Profit over time'
+  },
+  series : [{
+    name : 'Profit',
+    data : datasets,
+    tooltip: {
+      valueDecimals: 2
+    }
+  }]
+});
+function checkUpdates(){
+  $.ajax({
+      url: '/net-profit-data',
+      success: function(data) {
+        var dataObject = JSON.parse(data);
+        $.each(dataObject, function(i, amount){
+          var chart = Highcharts.charts[0];
+          $.grep(chart.series[1].data, function(e){ return e.x == i; })[0].update(parseInt(amount));
+          $.grep(chart.series[0].data, function(e){ return e.x == i; })[0].update(parseInt(amount));
+        });
+      },
+      cache: false
+  });
+}
+$(document).ready(function() {
+    setInterval("checkUpdates()", 1000);  // Calls the function every 3 seconds
+});
+</script>
