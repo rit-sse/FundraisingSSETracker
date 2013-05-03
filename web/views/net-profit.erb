@@ -10,7 +10,46 @@ var datasets = [
 
 $('#highchart-chart').highcharts('StockChart', {
   rangeSelector : {
-    selected : 1
+    selected : 1,
+    buttons: [{
+      type : 'minute',
+      count : 10,
+      text : '10m'
+    }, {
+      type : 'hour',
+      count : 1,
+      text : '1H'
+    }, {
+      type : 'day',
+      count : 1,
+      text : '1D'
+    }, {
+      type : 'day',
+      count : 7,
+      text : '1W'
+    },{
+      type: 'month',
+      count: 1,
+      text: '1m'
+    }, {
+      type: 'month',
+      count: 3,
+      text: '3m'
+    }, {
+      type: 'month',
+      count: 6,
+      text: '6m'
+    }, {
+      type: 'ytd',
+      text: 'YTD'
+    }, {
+      type: 'year',
+      count: 1,
+      text: '1y'
+    }, {
+      type: 'all',
+      text: 'All'
+    }]
   },
 
   title : {

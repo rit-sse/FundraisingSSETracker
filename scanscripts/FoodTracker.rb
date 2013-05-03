@@ -99,7 +99,7 @@ class FoodTracker
 
   def record_scan_time(item, time, number)
     scan = Scan.new(time: time, purchase: @purchase_mode, quantity: number)
-    scan.item = item
+    scan.item_id = item.id
     scan.save
   end
 

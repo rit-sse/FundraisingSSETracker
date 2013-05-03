@@ -1,3 +1,11 @@
+require "active_support/core_ext/numeric/time"
+
+class Time
+  def floor(seconds = 60)
+    Time.at((self.to_f / seconds).floor * seconds)
+  end
+end
+
 def day_helper item
 	sold = Scan.where(item_id: item.id, purchase: true, time: Date.today.to_datetime..Date.today.next_day.to_datetime ).inject(0){|sum, x| sum+= x.quantity}
   amount = Scan.where(item_id: item.id, purchase: false, time: Date.today.to_datetime..Date.today.next_day.to_datetime ).inject(0){|sum, x| sum+= x.quantity} - sold
@@ -35,9 +43,12 @@ end
 def parse_scans
   hash = Hash.new(0)
   @scans.sort_by{|x| x.time}.each do |scan|
-    scan.time.to_date.upto(Date.today) do |date|
-      hash[date.to_time.to_i*1000] += scan.purchase ? scan.item.cost : -scan.item.retail_price
+    hour = scan.time.floor(10.minutes)
+    while hour < Time.now
+      hash[hour.to_i*1000] += scan.purchase ? Item.find(scan.item_id).cost : -Item.find(scan.item_id).retail_price
+      hour += 10.minutes
     end
   end
   hash
 end
+
