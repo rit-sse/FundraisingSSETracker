@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS items (
 	upc				varchar(50) NOT NULL,
 	name			varchar(100) NOT NULL,
 	cost			money,
-	retail_price	money NOT NULL
+	retail_price	money
 );
 
 CREATE TABLE IF NOT EXISTS scans (
