@@ -3,8 +3,8 @@ require 'will_paginate'
 require 'will_paginate/active_record'
 require 'will_paginate/view_helpers/sinatra'
 require 'will_paginate-bootstrap'
-require '../DatabaseModels'
-require './helper'
+require File.join(File.dirname(__FILE__),'..', 'DatabaseModels')
+require File.join(File.dirname(__FILE__),'helper')
 
 
 

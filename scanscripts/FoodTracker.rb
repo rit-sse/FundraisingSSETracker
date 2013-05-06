@@ -1,6 +1,6 @@
-require '../DatabaseModels'
-require './FoodParser'
-require './FoodConfig'
+require File.join(File.dirname(__FILE__),'..', 'DatabaseModels')
+require File.join(File.dirname(__FILE__),'FoodParser')
+require File.join(File.dirname(__FILE__),'FoodConfig')
 
 # The Food Tracker Class is the CLI interface
 # which holds a Hash Table of FoodItems.
@@ -14,7 +14,7 @@ class FoodTracker
   end
 
   def command_line
-    prompt = "(n)ew , (a)dd, (r)ead, (p)urchase mode toggle, (v)iew scan times, (q)uit \nput in a hash to remove one element of it, or add a new item to store it in the database.\n"
+    prompt = "(a)dd, (e)dit, (r)ead, (p)urchase mode toggle, (v)iew scan times, (q)uit \nput in a hash to remove one element of it, or add a new item to store it in the database.\n"
     while(true) do
       puts
       sysout( prompt )
@@ -22,16 +22,16 @@ class FoodTracker
 
       input = gets.chomp
       input = @config.get_upc(input) #filter for redirects
-      abort("EOF, terminating program...") if input == nil
+      abort("EOF, terminating program...") if input.nil?
       input.downcase!
 
       case input
       when "a"
         add_item_cmd
+      when "e"
+        edit_item
       when "r"
         read_items
-      when "n"
-        new_item
       when "q"
         shutdown
         break
@@ -99,7 +99,7 @@ class FoodTracker
 
   def record_scan_time(item, time, number)
     scan = Scan.new(time: time, purchase: @purchase_mode, quantity: number)
-    scan.item_id = item.id
+    scan.item = item
     scan.save
   end
 
@@ -113,7 +113,7 @@ class FoodTracker
   end
 
   def update_item_amount(item, amount)
-    inventory = item.inventory.nil? ? Inventory.create(:item_id=>item.id, :amount=>0, :sold=>0) : item.inventory
+    inventory = item.inventory.nil? ? Inventory.create(amount: 0, sold: 0){|i| i.item = item } : item.inventory
 
     if @purchase_mode
       Inventory.update(inventory.id, :sold=>"#{inventory.sold + amount}")
@@ -127,6 +127,40 @@ class FoodTracker
     Item.scoped.each {|x| puts "#{x}\t(#{x.inventory.amount - x.inventory.sold} remaining)"}
   end
 
+  def edit_item
+    puts("UPC to edit: ")
+    upc = gets.chomp
+    upc = @config.get_upc(upc)
+    item = Item.find_by_upc(upc)
+    if item.nil?
+      sysout("Item not in database")
+    else
+      while(true)
+        sysout("Editing #{item.name}.")
+        sysout("What would you like to edit? (n)ame, (r)etail price, (c)ost, (b)ack")
+        input = gets.chomp
+        case input
+        when 'n'
+          puts "New name:"
+          item.name = gets.chomp
+          item.save
+        when 'r'
+          puts "New retail price:"
+          item.retail_price = gets.chomp
+          item.save
+        when 'c'
+          puts "New cost:"
+          item.cost = gets.chomp
+          item.save
+        when 'b'
+          break
+        else
+          puts 'Invalid Option'
+        end
+      end
+    end
+  end
+
   # System IO for future debugging
   def sysout(string)
     puts ("[SYSTEM]: " + string)
@@ -138,4 +172,5 @@ class FoodTracker
     #Do I/O (save to file for example)
     puts("Food Item Tracker Terminated")
   end
+
 end
