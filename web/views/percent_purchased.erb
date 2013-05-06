@@ -1,5 +1,5 @@
 <div class="btn-group">
-  <a class="btn btn-primary"><i class="icon-calendar icon-white"></i> Sort By</a>
+  <a class="btn btn-primary"><i class="icon-calendar icon-white"></i> Filter By</a>
   <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
   <ul class="dropdown-menu">
     <li id="day"><a href="#"><i class="icon-hand-right"></i> Day</a></li>
@@ -17,6 +17,9 @@
         <%end%>
     </div>
 <% end %>
+<div class= "pagination-centered">
+    <%= will_paginate @items, renderer: BootstrapPagination::Sinatra %>
+</div>
 <script>
 var dataShown = 'alltime';
 var $containers = $('.row div.span3'),
@@ -111,7 +114,8 @@ $('#alltime').click(function(){
 function checkUpdates(){
     $.ajax({
         url: '/percent-purchased-data',
-        data: {'data_shown': dataShown},
+        data: {'data_shown': dataShown,
+                'page': <%= params[:page] %>},
         success: function(data) {
             var dataObject = JSON.parse(data);
             $.each(dataObject, function(i, item){
