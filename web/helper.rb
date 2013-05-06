@@ -43,10 +43,10 @@ end
 def parse_scans
   hash = Hash.new(0)
   @scans.sort_by{|x| x.time}.each do |scan|
-    hour = scan.time.floor(10.minutes)
-    while hour < Time.now
-      hash[hour.to_i*1000] += scan.purchase ? Item.find(scan.item_id).cost : -Item.find(scan.item_id).retail_price
-      hour += 10.minutes
+    ten_minute_increment = scan.time.floor(10.minutes)
+    while ten_minute_increment < Time.now
+      hash[ten_minute_increment.to_i*1000] += scan.purchase ? Item.find(scan.item_id).cost : -Item.find(scan.item_id).retail_price
+      ten_minute_increment += 10.minutes
     end
   end
   hash
